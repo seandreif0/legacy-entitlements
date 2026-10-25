@@ -3,7 +3,8 @@ package com.meridian.ent.batch;
 import java.io.File;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.meridian.ent.util.DateUtil;
 
@@ -12,7 +13,7 @@ import com.meridian.ent.util.DateUtil;
  */
 public class ExtractLocator {
 
-    private static final Logger LOG = Logger.getLogger(ExtractLocator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExtractLocator.class);
 
     private String extractDir;
     private String prefix = "HR_USERS_";

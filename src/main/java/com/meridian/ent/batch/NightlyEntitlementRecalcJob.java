@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.meridian.ent.dao.BatchAuditDao;
 import com.meridian.ent.dao.EntitlementDao;
@@ -23,7 +24,7 @@ public class NightlyEntitlementRecalcJob {
 
     public static final String JOB_NAME = "ENT_NIGHTLY_RECALC";
 
-    private static final Logger LOG = Logger.getLogger(NightlyEntitlementRecalcJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NightlyEntitlementRecalcJob.class);
 
     private ExtractLocator extractLocator;
     private HrExtractReader reader;
