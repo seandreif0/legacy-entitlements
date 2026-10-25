@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.meridian.ent.dao.BatchAuditDao;
 import com.meridian.ent.dao.EntitlementDao;
@@ -20,19 +22,33 @@ import com.meridian.ent.model.InternalUser;
 /**
  * Nightly job. Do not change the schedule without telling the Index desk.
  */
+@Component
 public class NightlyEntitlementRecalcJob {
 
     public static final String JOB_NAME = "ENT_NIGHTLY_RECALC";
 
     private static final Logger LOG = LoggerFactory.getLogger(NightlyEntitlementRecalcJob.class);
 
-    private ExtractLocator extractLocator;
-    private HrExtractReader reader;
-    private EntitlementRuleEngine ruleEngine;
-    private UserDao userDao;
-    private EntitlementDao entitlementDao;
-    private BatchAuditDao batchAuditDao;
+    private final ExtractLocator extractLocator;
+    private final HrExtractReader reader;
+    private final EntitlementRuleEngine ruleEngine;
+    private final UserDao userDao;
+    private final EntitlementDao entitlementDao;
+    private final BatchAuditDao batchAuditDao;
 
+    public NightlyEntitlementRecalcJob(ExtractLocator extractLocator, HrExtractReader reader,
+                                       EntitlementRuleEngine ruleEngine, UserDao userDao,
+                                       EntitlementDao entitlementDao, BatchAuditDao batchAuditDao) {
+        this.extractLocator = extractLocator;
+        this.reader = reader;
+        this.ruleEngine = ruleEngine;
+        this.userDao = userDao;
+        this.entitlementDao = entitlementDao;
+        this.batchAuditDao = batchAuditDao;
+    }
+
+    // runs after the HR feed lands (01:00)
+    @Scheduled(cron = "${ent.batch.cron}")
     public void run() {
         recalc(new Date());
     }
@@ -94,10 +110,4 @@ public class NightlyEntitlementRecalcJob {
         return res;
     }
 
-    public void setExtractLocator(ExtractLocator extractLocator) { this.extractLocator = extractLocator; }
-    public void setReader(HrExtractReader reader) { this.reader = reader; }
-    public void setRuleEngine(EntitlementRuleEngine ruleEngine) { this.ruleEngine = ruleEngine; }
-    public void setUserDao(UserDao userDao) { this.userDao = userDao; }
-    public void setEntitlementDao(EntitlementDao entitlementDao) { this.entitlementDao = entitlementDao; }
-    public void setBatchAuditDao(BatchAuditDao batchAuditDao) { this.batchAuditDao = batchAuditDao; }
 }

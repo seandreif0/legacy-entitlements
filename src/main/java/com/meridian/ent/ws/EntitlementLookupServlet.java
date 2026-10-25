@@ -3,14 +3,12 @@ package com.meridian.ent.ws;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.meridian.ent.service.EntitlementService;
 
@@ -24,15 +22,6 @@ public class EntitlementLookupServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(EntitlementLookupServlet.class);
 
     private EntitlementService entitlementService;
-
-    @Override
-    public void init() throws ServletException {
-        if (entitlementService == null) {
-            entitlementService = WebApplicationContextUtils
-                .getRequiredWebApplicationContext(getServletContext())
-                .getBean("entitlementService", EntitlementService.class);
-        }
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

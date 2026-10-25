@@ -3,15 +3,23 @@ package com.meridian.ent.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.meridian.ent.dao.EntitlementDao;
 import com.meridian.ent.dao.UserDao;
 import com.meridian.ent.model.Entitlement;
 import com.meridian.ent.model.InternalUser;
 
+@Service("entitlementService")
 public class EntitlementServiceImpl implements EntitlementService {
 
-    private EntitlementDao entitlementDao;
-    private UserDao userDao;
+    private final EntitlementDao entitlementDao;
+    private final UserDao userDao;
+
+    public EntitlementServiceImpl(EntitlementDao entitlementDao, UserDao userDao) {
+        this.entitlementDao = entitlementDao;
+        this.userDao = userDao;
+    }
 
     public List<Entitlement> getEntitlements(String userId) {
         if (userId == null) {
@@ -31,7 +39,4 @@ public class EntitlementServiceImpl implements EntitlementService {
         }
         return entitlementDao.hasAccess(userId.toLowerCase(), datasetCode.toUpperCase());
     }
-
-    public void setEntitlementDao(EntitlementDao entitlementDao) { this.entitlementDao = entitlementDao; }
-    public void setUserDao(UserDao userDao) { this.userDao = userDao; }
 }

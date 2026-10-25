@@ -7,12 +7,18 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import com.meridian.ent.model.InternalUser;
 
+@Repository
 public class OracleUserDao implements UserDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public OracleUserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     private static final String SELECT_COLS =
         "SELECT USER_ID, FULL_NAME, DEPT_CODE, COST_CENTER, NVL(GRADE, 0) GRADE, STATUS, LAST_SEEN_DT FROM INTERNAL_USER ";
@@ -61,9 +67,5 @@ public class OracleUserDao implements UserDao {
             }
         }
         return count;
-    }
-
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
     }
 }
