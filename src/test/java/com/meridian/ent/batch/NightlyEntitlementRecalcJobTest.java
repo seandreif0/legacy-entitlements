@@ -9,10 +9,14 @@ import java.text.SimpleDateFormat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,8 +26,9 @@ import com.meridian.ent.dao.EntitlementDao;
 import com.meridian.ent.dao.UserDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = NightlyEntitlementRecalcJobTest.TestConfig.class)
-@TestPropertySource(locations = "classpath:application.properties", properties = {
+@SpringBootTest(classes = NightlyEntitlementRecalcJobTest.TestConfig.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@ActiveProfiles("local")
+@TestPropertySource(properties = {
     "ent.jdbc.url=jdbc:h2:mem:enttest;MODE=Oracle;DB_CLOSE_DELAY=-1",
     "ent.extract.dir=target/test-classes/extracts"
 })
@@ -31,6 +36,7 @@ public class NightlyEntitlementRecalcJobTest {
 
     @Configuration
     @Import(EntitlementDataConfig.class)
+    @ImportAutoConfiguration({DataSourceAutoConfiguration.class, SqlInitializationAutoConfiguration.class})
     @ComponentScan({"com.meridian.ent.batch", "com.meridian.ent.dao", "com.meridian.ent.service"})
     static class TestConfig {
     }
