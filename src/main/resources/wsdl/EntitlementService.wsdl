@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- hand maintained; the servlet does not validate against this -->
+<definitions name="EntitlementService"
+             targetNamespace="http://ent.meridian.example/ws/1.0"
+             xmlns:tns="http://ent.meridian.example/ws/1.0"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <message name="GetEntitlementsRequest">
+    <part name="userId" type="xsd:string"/>
+  </message>
+  <message name="GetEntitlementsResponse">
+    <part name="entitlements" type="xsd:string"/>
+  </message>
+  <message name="CheckAccessRequest">
+    <part name="userId" type="xsd:string"/>
+    <part name="datasetCode" type="xsd:string"/>
+  </message>
+  <message name="CheckAccessResponse">
+    <part name="allowed" type="xsd:boolean"/>
+  </message>
+  <portType name="EntitlementPort">
+    <operation name="getEntitlements">
+      <input message="tns:GetEntitlementsRequest"/>
+      <output message="tns:GetEntitlementsResponse"/>
+    </operation>
+    <operation name="checkAccess">
+      <input message="tns:CheckAccessRequest"/>
+      <output message="tns:CheckAccessResponse"/>
+    </operation>
+  </portType>
+  <binding name="EntitlementBinding" type="tns:EntitlementPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getEntitlements"><soap:operation soapAction="getEntitlements"/></operation>
+    <operation name="checkAccess"><soap:operation soapAction="checkAccess"/></operation>
+  </binding>
+  <service name="EntitlementService">
+    <port name="EntitlementPort" binding="tns:EntitlementBinding">
+      <soap:address location="http://ent-app-p01.corp.meridian.example:8080/ent-svc/services/EntitlementService"/>
+    </port>
+  </service>
+</definitions>

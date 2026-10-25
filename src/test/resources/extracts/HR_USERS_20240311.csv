@@ -1,0 +1,7 @@
+EMP_ID,FULL_NAME,DEPT,COST_CTR,GRADE,EMP_STATUS
+U10001,Avery Lindqvist,RSCH,CC410,7,ACTIVE
+u10002,Jordan Okafor,IDX,CC220,4,A
+u10004,Casey Montrose,ESG,CC300,5,ACT
+u10005,Rowan Achterberg,OPS,CC900,3,ACTIVE
+u10006,Morgan Vale,RSCH,CC410,6,LEAVE
+bad-row-missing-fields,Someone

@@ -1,0 +1,65 @@
+package com.meridian.ent.ws;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.meridian.ent.service.EntitlementService;
+
+/**
+ * SOAP endpoint used by the research portal and the index publishing tool.
+ * Authentication is handled upstream by the F5.
+ */
+public class EntitlementLookupServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOG = Logger.getLogger(EntitlementLookupServlet.class);
+
+    private EntitlementService entitlementService;
+
+    @Override
+    public void init() throws ServletException {
+        if (entitlementService == null) {
+            entitlementService = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext())
+                .getBean("entitlementService", EntitlementService.class);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader r = req.getReader();
+        String line;
+        while ((line = r.readLine()) != null) {
+            sb.append(line);
+        }
+        resp.setContentType("text/xml;charset=UTF-8");
+        resp.getWriter().write(handle(sb.toString()));
+    }
+
+    String handle(String body) {
+        String op = SoapEnvelopeUtil.operation(body);
+        String userId = SoapEnvelopeUtil.extract(body, "userId");
+        LOG.debug("op=" + op + " user=" + userId);
+        if ("getEntitlements".equals(op)) {
+            return SoapEnvelopeUtil.entitlementsResponse(userId, entitlementService.getEntitlements(userId));
+        }
+        if ("checkAccess".equals(op)) {
+            String ds = SoapEnvelopeUtil.extract(body, "datasetCode");
+            return SoapEnvelopeUtil.checkAccessResponse(entitlementService.checkAccess(userId, ds));
+        }
+        return SoapEnvelopeUtil.fault("Client", "Unknown operation");
+    }
+
+    void setEntitlementService(EntitlementService entitlementService) {
+        this.entitlementService = entitlementService;
+    }
+}

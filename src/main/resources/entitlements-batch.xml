@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+  <bean id="extractLocator" class="com.meridian.ent.batch.ExtractLocator">
+    <property name="extractDir" value="${ent.extract.dir}"/>
+    <property name="prefix" value="${ent.extract.prefix}"/>
+    <property name="maxAgeDays" value="${ent.extract.maxAgeDays}"/>
+  </bean>
+
+  <bean id="hrExtractReader" class="com.meridian.ent.batch.HrExtractReader"/>
+
+  <bean id="entitlementRuleEngine" class="com.meridian.ent.batch.EntitlementRuleEngine"/>
+
+  <bean id="nightlyEntitlementRecalcJob" class="com.meridian.ent.batch.NightlyEntitlementRecalcJob">
+    <property name="extractLocator" ref="extractLocator"/>
+    <property name="reader" ref="hrExtractReader"/>
+    <property name="ruleEngine" ref="entitlementRuleEngine"/>
+    <property name="userDao" ref="userDao"/>
+    <property name="entitlementDao" ref="entitlementDao"/>
+    <property name="batchAuditDao" ref="batchAuditDao"/>
+  </bean>
+</beans>
