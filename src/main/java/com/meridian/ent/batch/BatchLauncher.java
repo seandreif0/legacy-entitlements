@@ -1,7 +1,14 @@
 package com.meridian.ent.batch;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.io.support.ResourcePropertySource;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import com.meridian.ent.config.EntitlementDataConfig;
 
@@ -11,13 +18,18 @@ import com.meridian.ent.config.EntitlementDataConfig;
  */
 public class BatchLauncher {
 
+    @Configuration
+    @Import(EntitlementDataConfig.class)
+    @ImportAutoConfiguration({DataSourceAutoConfiguration.class, SqlInitializationAutoConfiguration.class})
+    @ComponentScan({"com.meridian.ent.batch", "com.meridian.ent.dao"})
+    static class LauncherConfig {
+    }
+
     public static void main(String[] args) throws Exception {
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
         // system properties take precedence over application.properties
-        ctx.getEnvironment().getPropertySources().addLast(new ResourcePropertySource("classpath:application.properties"));
-        ctx.register(EntitlementDataConfig.class);
-        ctx.scan("com.meridian.ent.batch", "com.meridian.ent.dao");
-        ctx.refresh();
+        ConfigurableApplicationContext ctx = new SpringApplicationBuilder(LauncherConfig.class)
+            .web(WebApplicationType.NONE)
+            .run(args);
         try {
             NightlyEntitlementRecalcJob job = ctx.getBean(NightlyEntitlementRecalcJob.class);
             RecalcResult r = job.recalc(new java.util.Date());

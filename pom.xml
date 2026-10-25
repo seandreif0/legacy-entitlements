@@ -31,16 +31,16 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
-    <!-- to be replaced by HikariCP in Phase 3 -->
-    <dependency>
-      <groupId>commons-dbcp</groupId>
-      <artifactId>commons-dbcp</artifactId>
-      <version>1.4</version>
-    </dependency>
-    <!-- swapped to ojdbc6 on the build server, see deploy notes -->
+    <!-- local profile -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+    </dependency>
+    <!-- prod profile (replaces the ojdbc6 swap on the build server) -->
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc11</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
