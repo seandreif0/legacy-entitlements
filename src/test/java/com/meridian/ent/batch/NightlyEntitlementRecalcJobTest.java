@@ -1,13 +1,12 @@
 package com.meridian.ent.batch;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.SimpleDateFormat;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -18,14 +17,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.meridian.ent.config.EntitlementDataConfig;
 import com.meridian.ent.dao.BatchAuditDao;
 import com.meridian.ent.dao.EntitlementDao;
 import com.meridian.ent.dao.UserDao;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = NightlyEntitlementRecalcJobTest.TestConfig.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("local")
 @TestPropertySource(properties = {
