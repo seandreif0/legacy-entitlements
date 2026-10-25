@@ -48,7 +48,7 @@ public class NightlyEntitlementRecalcJob {
     }
 
     // runs after the HR feed lands (01:00)
-    @Scheduled(cron = "${ent.batch.cron}")
+    @Scheduled(cron = "${ent.batch.cron}", zone = "${ent.batch.zone:}")
     public void run() {
         recalc(new Date());
     }
