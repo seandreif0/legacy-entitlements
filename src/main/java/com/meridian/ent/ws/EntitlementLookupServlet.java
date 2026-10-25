@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.meridian.ent.service.EntitlementService;
@@ -20,7 +21,7 @@ import com.meridian.ent.service.EntitlementService;
 public class EntitlementLookupServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOG = Logger.getLogger(EntitlementLookupServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EntitlementLookupServlet.class);
 
     private EntitlementService entitlementService;
 
