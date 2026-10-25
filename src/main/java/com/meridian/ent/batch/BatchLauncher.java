@@ -1,42 +1,39 @@
 package com.meridian.ent.batch;
 
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import java.util.Date;
 
-import com.meridian.ent.config.EntitlementDataConfig;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.ExitCodeGenerator;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 /**
- * Manual rerun for ops: java -cp ... com.meridian.ent.batch.BatchLauncher
- * Pass -Dent.extract.dir=... to point at another drop folder.
+ * Manual rerun for ops: java -jar ent-svc.jar --spring.profiles.active=local,rerun (or prod,rerun).
+ * Pass -Dent.extract.dir=... to point at another drop folder. Exits 0 on OK, 2 otherwise.
  */
-public class BatchLauncher {
+@Component
+@Profile(BatchLauncher.PROFILE)
+public class BatchLauncher implements ApplicationRunner, ExitCodeGenerator {
 
-    @Configuration
-    @Import(EntitlementDataConfig.class)
-    @ImportAutoConfiguration({DataSourceAutoConfiguration.class, SqlInitializationAutoConfiguration.class})
-    @ComponentScan({"com.meridian.ent.batch", "com.meridian.ent.dao"})
-    static class LauncherConfig {
+    public static final String PROFILE = "rerun";
+
+    private final NightlyEntitlementRecalcJob job;
+    private int exitCode = 2;
+
+    public BatchLauncher(NightlyEntitlementRecalcJob job) {
+        this.job = job;
     }
 
-    public static void main(String[] args) throws Exception {
-        // system properties take precedence over application.properties
-        ConfigurableApplicationContext ctx = new SpringApplicationBuilder(LauncherConfig.class)
-            .web(WebApplicationType.NONE)
-            .run(args);
-        try {
-            NightlyEntitlementRecalcJob job = ctx.getBean(NightlyEntitlementRecalcJob.class);
-            RecalcResult r = job.recalc(new java.util.Date());
-            System.out.println(r);
-            System.exit("OK".equals(r.status) ? 0 : 2);
-        } finally {
-            ctx.close();
-        }
+    @Override
+    public void run(ApplicationArguments args) {
+        RecalcResult r = job.recalc(new Date());
+        System.out.println(r);
+        exitCode = "OK".equals(r.status) ? 0 : 2;
+    }
+
+    @Override
+    public int getExitCode() {
+        return exitCode;
     }
 }
