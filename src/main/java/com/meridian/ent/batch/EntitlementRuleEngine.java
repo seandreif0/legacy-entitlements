@@ -3,6 +3,8 @@ package com.meridian.ent.batch;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.meridian.ent.model.Entitlement;
 import com.meridian.ent.model.HrExtractRow;
 
@@ -10,6 +12,7 @@ import com.meridian.ent.model.HrExtractRow;
  * Derives dataset entitlements from department / grade.
  * Rules agreed with Data Governance 2013, see ENT-DG-004.
  */
+@Component
 public class EntitlementRuleEngine {
 
     public List<Entitlement> derive(HrExtractRow row) {

@@ -6,15 +6,21 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import com.meridian.ent.model.Entitlement;
 
 /**
  * Entitlement persistence. All writes are transactional.
  */
+@Repository
 public class OracleEntitlementDao implements EntitlementDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public OracleEntitlementDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     private static final RowMapper<Entitlement> MAPPER = new RowMapper<Entitlement>() {
         public Entitlement mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -59,9 +65,5 @@ public class OracleEntitlementDao implements EntitlementDao {
     public int revokeAll(String userId) {
         // manual grants are kept for audit
         return jdbcTemplate.update("DELETE FROM USER_ENTITLEMENT WHERE USER_ID = ?", userId);
-    }
-
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
     }
 }

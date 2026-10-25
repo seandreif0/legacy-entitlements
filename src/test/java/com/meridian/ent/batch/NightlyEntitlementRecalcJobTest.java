@@ -9,16 +9,31 @@ import java.text.SimpleDateFormat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.meridian.ent.config.EntitlementDataConfig;
 import com.meridian.ent.dao.BatchAuditDao;
 import com.meridian.ent.dao.EntitlementDao;
 import com.meridian.ent.dao.UserDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:test-context.xml")
+@ContextConfiguration(classes = NightlyEntitlementRecalcJobTest.TestConfig.class)
+@TestPropertySource(locations = "classpath:application.properties", properties = {
+    "ent.jdbc.url=jdbc:h2:mem:enttest;MODE=Oracle;DB_CLOSE_DELAY=-1",
+    "ent.extract.dir=target/test-classes/extracts"
+})
 public class NightlyEntitlementRecalcJobTest {
+
+    @Configuration
+    @Import(EntitlementDataConfig.class)
+    @ComponentScan({"com.meridian.ent.batch", "com.meridian.ent.dao", "com.meridian.ent.service"})
+    static class TestConfig {
+    }
 
     @Autowired
     private NightlyEntitlementRecalcJob job;

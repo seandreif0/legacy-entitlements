@@ -6,12 +6,18 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import com.meridian.ent.model.BatchRun;
 
+@Repository
 public class OracleBatchAuditDao implements BatchAuditDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public OracleBatchAuditDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public long start(String jobName) {
         Long id = jdbcTemplate.queryForObject("SELECT BATCH_RUN_SEQ.NEXTVAL FROM DUAL", Long.class);
@@ -45,9 +51,5 @@ public class OracleBatchAuditDao implements BatchAuditDao {
                 }
             }, jobName);
         return l.isEmpty() ? null : l.get(0);
-    }
-
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
     }
 }
