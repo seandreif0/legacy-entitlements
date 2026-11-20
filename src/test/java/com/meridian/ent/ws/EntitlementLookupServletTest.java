@@ -1,11 +1,11 @@
 package com.meridian.ent.ws;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.meridian.ent.model.Entitlement;
 import com.meridian.ent.service.EntitlementService;

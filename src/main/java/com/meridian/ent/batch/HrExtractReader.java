@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.meridian.ent.model.HrExtractRow;
 
 public class HrExtractReader {
 
-    private static final Logger LOG = Logger.getLogger(HrExtractReader.class);
+    private static final Logger LOG = LogManager.getLogger(HrExtractReader.class);
 
     private int rejected;
 

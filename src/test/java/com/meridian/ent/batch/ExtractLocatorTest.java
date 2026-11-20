@@ -1,12 +1,12 @@
 package com.meridian.ent.batch;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ExtractLocatorTest {
 
@@ -18,19 +18,19 @@ public class ExtractLocatorTest {
     }
 
     @Test
-    public void findsSameDayFile() throws Exception {
-        File f = locator(3).locate(new SimpleDateFormat("yyyyMMdd").parse("20240311"));
+    public void findsSameDayFile() {
+        File f = locator(3).locate(LocalDate.of(2024, 3, 11));
         assertEquals("HR_USERS_20240311.csv", f.getName());
     }
 
     @Test
-    public void usesPreviousFileWhenTodaysIsMissing() throws Exception {
-        File f = locator(3).locate(new SimpleDateFormat("yyyyMMdd").parse("20240313"));
+    public void usesPreviousFileWhenTodaysIsMissing() {
+        File f = locator(3).locate(LocalDate.of(2024, 3, 13));
         assertEquals("HR_USERS_20240311.csv", f.getName());
     }
 
     @Test
-    public void returnsNullWhenNothingRecent() throws Exception {
-        assertNull(locator(1).locate(new SimpleDateFormat("yyyyMMdd").parse("20240320")));
+    public void returnsNullWhenNothingRecent() {
+        assertNull(locator(1).locate(LocalDate.of(2024, 3, 20)));
     }
 }

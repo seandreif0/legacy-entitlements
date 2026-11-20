@@ -1,23 +1,20 @@
 package com.meridian.ent.batch;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.meridian.ent.dao.BatchAuditDao;
 import com.meridian.ent.dao.EntitlementDao;
 import com.meridian.ent.dao.UserDao;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:test-context.xml")
+@SpringJUnitConfig(locations = "classpath:test-context.xml")
 public class NightlyEntitlementRecalcJobTest {
 
     @Autowired
@@ -31,7 +28,7 @@ public class NightlyEntitlementRecalcJobTest {
 
     @Test
     public void recalcFromExtract() throws Exception {
-        RecalcResult r = job.recalc(new SimpleDateFormat("yyyyMMdd").parse("20240312"));
+        RecalcResult r = job.recalc(LocalDate.of(2024, 3, 12));
 
         assertEquals("OK", r.status);
         assertEquals("HR_USERS_20240311.csv", r.extractFile);

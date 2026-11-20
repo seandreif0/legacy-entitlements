@@ -1,9 +1,10 @@
 package com.meridian.ent.batch;
 
 import java.io.File;
-import java.util.Date;
+import java.time.LocalDate;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.meridian.ent.util.DateUtil;
 
@@ -12,15 +13,15 @@ import com.meridian.ent.util.DateUtil;
  */
 public class ExtractLocator {
 
-    private static final Logger LOG = Logger.getLogger(ExtractLocator.class);
+    private static final Logger LOG = LogManager.getLogger(ExtractLocator.class);
 
     private String extractDir;
     private String prefix = "HR_USERS_";
     private int maxAgeDays = 3;
 
-    public File locate(Date runDate) {
+    public File locate(LocalDate runDate) {
         for (int age = 0; age <= maxAgeDays; age++) {
-            String name = prefix + DateUtil.feedStamp(DateUtil.minusDays(runDate, age)) + ".csv";
+            String name = prefix + DateUtil.feedStamp(runDate.minusDays(age)) + ".csv";
             File f = new File(extractDir, name);
             if (f.exists() && f.length() > 0) {
                 if (age > 0) {
