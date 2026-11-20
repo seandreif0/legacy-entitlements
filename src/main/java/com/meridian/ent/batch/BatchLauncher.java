@@ -1,5 +1,7 @@
 package com.meridian.ent.batch;
 
+import java.time.LocalDate;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -13,7 +15,7 @@ public class BatchLauncher {
             "entitlements-dao.xml", "entitlements-batch.xml", "launcher-props.xml");
         try {
             NightlyEntitlementRecalcJob job = ctx.getBean(NightlyEntitlementRecalcJob.class);
-            RecalcResult r = job.recalc(new java.util.Date());
+            RecalcResult r = job.recalc(LocalDate.now());
             System.out.println(r);
             System.exit("OK".equals(r.status) ? 0 : 2);
         } finally {

@@ -1,25 +1,16 @@
 package com.meridian.ent.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public final class DateUtil {
 
     private DateUtil() {
     }
 
-    // thread safe
-    private static final SimpleDateFormat FEED_FMT = new SimpleDateFormat("yyyyMMdd");
+    private static final DateTimeFormatter FEED_FMT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    public static String feedStamp(Date d) {
+    public static String feedStamp(LocalDate d) {
         return FEED_FMT.format(d);
-    }
-
-    public static Date minusDays(Date d, int days) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.DAY_OF_MONTH, -days);
-        return c.getTime();
     }
 }
